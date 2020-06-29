@@ -131,6 +131,11 @@ function runMarkdownLinkCheck(markdown, opts) {
             console.log(chalk.yellow('No hyperlinks found!'));
         }
         results.forEach(function (result) {
+            // workaround to ignore 429 responses (too many requests)
+            if (result.statusCode === 429) {
+                result.status = 'ignored'
+            }
+
             // Skip messages for non-deadlinks in quiet mode.
             if (opts.quiet && result.status !== 'dead') {
                 return;
